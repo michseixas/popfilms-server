@@ -27,6 +27,4 @@ const userSchema = new Schema(
 
 const User = model("User", userSchema);
 
-let name = "mich";
-
 module.exports = User;
