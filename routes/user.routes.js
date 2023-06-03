@@ -1,35 +1,50 @@
-//import express to use router 
+//import express to use router
 const express = require("express");
 const router = express.Router();
 
 //import the mongoose models to access the database with the methods: (find, update, delete, create, find by id, ....)
 const User = require("../models/User.model");
 
-//find user by ID and get the info
+//find user by Id and retrive data /:userId
 router.get("/:userId", (req, res, next) => {
-//llamar al modelo user y que nos devuelva la informacion del user
-
-// User.find(userId)
-// .then(data => {
-// //we get the user data and we decide what we do withthe data
-// })
-// .catch
-
-
-
-})
-
-//find user by ID and get the info
-router.get("/:userId", (req, res, next) => {
-    //
+  const { userId } = req.params; //destructuring (will get userId from URL path)
+  User.findById(userId) //find method will find user by Id
+    .then((user) => {
+      //if user find by Id
+      res.json(user); //retrive data of the user
     })
+    .catch((err) => next(err));
+});
 
-    //find user by ID and get the info
-router.get("/:userId", (req, res, next) => {
-    //
+//update user data by Id /:userId/update
+router.post("/update", (req, res, next) => {
+  const { userId } = req.params; //destructuring (will get userId from URL path)
+  User.findByIdAndUpdate(userId, req.body, { new: true }) //find user by Id and will update it, (new: true return updated user data)
+    .then((user) => {
+      res.json(user); //send a json response with updated user
     })
+    .catch((err) => next(err));
+});
 
-    //find user by ID and get the info
-router.get("/:userId", (req, res, next) => {
-    //
+//delete user by Id /:userId/delete
+router.post("/delete", (req, res, next) => {
+  const { userId } = req.params; //destructuring (will get userId from URL path)
+  User.findByIdAndRemove(userId) //find user by Id and remove it from DB
+    .then(() => {
+      res.json({ message: "User deleted" }); //send a json respons with message "User deleted"
     })
+    .catch((err) => next(err));
+});
+
+//update user image by Id /:userId/updateImage
+router.post("/updateImage", (req, res, next) => {
+  const { image } = req.body; //destructuring (will get image from req.body)
+  const { userId } = req.params; //destructuring (will get userId from URL path)
+  User.findByIdAndUpdate(userId, { image }, { new: true }) //find user by Id and update image, (new: true return updated user data)
+    .then((user) => {
+      res.json(user); //send a json response with updated image
+    })
+    .catch((err) => next(err));
+});
+
+module.exports = router;
