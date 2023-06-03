@@ -1,5 +1,8 @@
+const transporter = require("../config/transporter.config");
+const emailTemplate = require("../templates/emailTemplate");
 const express = require("express");
 const router = express.Router();
+
 
 // ℹ️ Handles password encryption
 const bcrypt = require("bcrypt");
@@ -24,28 +27,27 @@ router.post("/signup", (req, res, next) => {
   // Check if email or password or name are provided as empty strings
   if (email === "" || password === "" || username === "") {
     console.log("Provide email, password and name")
-    res.status(400).json({ message: "Provide email, password and name" });
+    res.status(400).json({ message: "Provide email, password and name." });
     return;
   }
 
   // This regular expression check that the email is of a valid format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    console.log("Provide a valid email address.")
     res.status(400).json({ message: "Provide a valid email address." });
     return;
   }
 
-  // // This regular expression checks password for special characters and minimum length
-  // const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
-  // if (!passwordRegex.test(password)) {
-  //   console.log("Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.")
-  //   res.status(400).json({
-  //     message:
-  //       "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
-  //   });
-  //   return;
-  // }
+  // This regular expression checks password for special characters and minimum length
+  const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  if (!passwordRegex.test(password)) {
+    console.log("Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.")
+    res.status(400).json({
+      message:
+        "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+    });
+    return;
+  }
 
   // Check the users collection if a user with the same email already exists
   User.findOne({ email })
@@ -71,10 +73,22 @@ router.post("/signup", (req, res, next) => {
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      const { email, name, _id } = createdUser;
+      const { email, username, _id } = createdUser;
 
       // Create a new object that doesn't expose the password
-      const user = { email, name, _id };
+      const user = { email, username, _id };
+
+      // Send an email with the information we got from the form(nodemailer)
+      transporter.sendMail({
+        from: `"Popfilms Team" <${process.env.EMAIL_ADDRESS}>`,
+        to: email,
+        subject: "Welcome to Popfilms!",
+        text: `Hi, ${username} ! Welcome to Popfilms.`,
+        html: emailTemplate.welcomeEmail(username),
+      })
+      .then((info) => console.log("sent email success:" , info))
+      .catch((error) => console.log("sent email failed:" , error));
+      /*end of Send an email*/
 
       // Send a json response containing the user object
       res.status(201).json({ user: user });
@@ -84,16 +98,16 @@ router.post("/signup", (req, res, next) => {
 
 // POST  /auth/login - Verifies email and password and returns a JWT
 router.post("/login", (req, res, next) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   // Check if email or password are provided as empty string
-  if (email === "" || password === "") {
-    res.status(400).json({ message: "Provide email and password." });
+  if (username === "" || password === "") {
+    res.status(400).json({ message: "Provide username and password." });
     return;
   }
 
   // Check the users collection if a user with the same email exists
-  User.findOne({ email })
+  User.findOne({ username })
     .then((foundUser) => {
       if (!foundUser) {
         // If the user is not found, send an error response
@@ -106,10 +120,10 @@ router.post("/login", (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name } = foundUser;
+        const { _id, email, username } = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, name };
+        const payload = { _id, email, username };
 
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
