@@ -17,7 +17,7 @@ router.get("/:userId", (req, res, next) => {
 });
 
 //update user data by Id /:userId/update
-router.post("/update", (req, res, next) => {
+router.post("/:userId/update", (req, res, next) => {
   const { userId } = req.params; //destructuring (will get userId from URL path)
   User.findByIdAndUpdate(userId, req.body, { new: true }) //find user by Id and will update it, (new: true return updated user data)
     .then((user) => {
@@ -27,7 +27,7 @@ router.post("/update", (req, res, next) => {
 });
 
 //delete user by Id /:userId/delete
-router.post("/delete", (req, res, next) => {
+router.post("/:userId/delete", (req, res, next) => {
   const { userId } = req.params; //destructuring (will get userId from URL path)
   User.findByIdAndRemove(userId) //find user by Id and remove it from DB
     .then(() => {
@@ -37,7 +37,7 @@ router.post("/delete", (req, res, next) => {
 });
 
 //update user image by Id /:userId/updateImage
-router.post("/updateImage", (req, res, next) => {
+router.post("/:userId/updateImage", (req, res, next) => {
   const { image } = req.body; //destructuring (will get image from req.body)
   const { userId } = req.params; //destructuring (will get userId from URL path)
   User.findByIdAndUpdate(userId, { image }, { new: true }) //find user by Id and update image, (new: true return updated user data)
