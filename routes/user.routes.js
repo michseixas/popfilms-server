@@ -8,6 +8,7 @@ const User = require("../models/User.model");
 //find user by Id and retrive data /:userId
 router.get("/:userId", (req, res, next) => {
   const { userId } = req.params; //destructuring (will get userId from URL path)
+  console.log(userId);
   User.findById(userId) //find method will find user by Id
     .then((user) => {
       //if user find by Id
@@ -28,12 +29,21 @@ router.post("/:userId/update", (req, res, next) => {
 
 //delete user by Id /:userId/delete
 router.post("/:userId/delete", (req, res, next) => {
+  console.log("deleteeee method")
   const { userId } = req.params; //destructuring (will get userId from URL path)
-  User.findByIdAndRemove(userId) //find user by Id and remove it from DB
-    .then(() => {
-      res.json({ message: "User deleted" }); //send a json respons with message "User deleted"
+  User.findByIdAndRemove(req.session.currentUser._id) //find current user by Id and remove
+    .then((result) => {
+      req.session.destroy((err) => {
+        if (err) {
+          res.status(500).render("auth/logout", { errorMessage: err.message });
+          return;
+        }
+        res.redirect("/auth/login");
+      });
     })
-    .catch((err) => next(err));
+      .catch((err) => {
+        console.log(err);
+    });
 });
 
 //update user image by Id /:userId/updateImage
