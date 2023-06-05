@@ -30,7 +30,7 @@ const userSchema = new Schema(
     country: {
       type: String,
     },
-    birth_date: {
+    birthDate: {
       type: Date,
     },
     likedMovies: [
@@ -38,6 +38,10 @@ const userSchema = new Schema(
         type: String,
       },
     ],
+    imageUrl: {
+      type: String,
+    },
+
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
