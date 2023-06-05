@@ -18,7 +18,7 @@ router.get("/:userId", (req, res, next) => {
 });
 
 //update user data by Id /:userId/update
-router.post("/:userId/update", (req, res, next) => {
+router.put("/:userId/update", (req, res, next) => {
   const { userId } = req.params; //destructuring (will get userId from URL path)
   User.findByIdAndUpdate(userId, req.body, { new: true }) //find user by Id and will update it, (new: true return updated user data)
     .then((user) => {
