@@ -33,3 +33,63 @@ router.get("/:userId", (req, res, next) => {
 router.get("/:userId", (req, res, next) => {
     //
     })
+
+
+
+    
+
+    //like dislike movies routes
+
+
+// Like a movie
+//check the const {userId} and the const {movieId}
+router.post("/:userId/likeMovie", async (req, res, next) => {
+    const { userId } = req.params;
+    const { movieId } = req.body;
+  
+    try {
+      // Find the user by ID
+      const user = await User.findById(userId);
+  
+      // Check if the user already liked the movie
+      if (!user.likedMovies.includes(movieId)) {
+        // Add the movie ID to the likedMovies array
+        user.likedMovies.push(movieId);
+        // await user.save();
+        await User.findByIdAndUpdate(userId, user)
+      }
+  
+      res.status(200).json({ message: "Movie liked successfully." });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+
+  //dislike movie
+
+  router.post("/:userId/dislikeMovie", async (req, res, next) => {
+    const { userId } = req.params;
+    const { movieId } = req.body;
+  
+    try {
+      // Find the user by ID
+      const user = await User.findById(userId);
+  
+      // Check if the user already disliked the movie
+      if (!user.dislikedMovies.includes(movieId)) {
+        // Add the movie ID to the dislikedMovies array
+        user.dislikedMovies.push(movieId);
+        await user.save();
+      }
+  
+      res.status(200).json({ message: "Movie disliked successfully." });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+
+  module.exports = router;
+
+

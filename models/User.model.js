@@ -33,6 +33,11 @@ const userSchema = new Schema(
     birth_date: {
       type: Date,
     },
+    likedMovies: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

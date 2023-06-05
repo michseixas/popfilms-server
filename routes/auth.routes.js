@@ -142,6 +142,7 @@ router.post("/login", (req, res, next) => {
 
 
 
+//Crear una nueva ruta se dijo
 
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
