@@ -4,6 +4,7 @@ const router = express.Router();
 
 //import the mongoose models to access the database with the methods: (find, update, delete, create, find by id, ....)
 const User = require("../models/User.model");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 //find user by Id and retrive data /:userId
 router.get("/:userId", (req, res, next) => {
@@ -27,12 +28,6 @@ router.post("/:userId/update", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-    //find user by ID and get the info
-router.get("/:userId", (req, res, next) => {
-    //
-    })
-
-
 
     
 
@@ -41,13 +36,15 @@ router.get("/:userId", (req, res, next) => {
 
 // Like a movie
 //check the const {userId} and the const {movieId}
-router.post("/:userId/likeMovie", async (req, res, next) => {
-    const { userId } = req.params;
-    const { movieId } = req.body;
+router.post("/likeMovie", isAuthenticated,  async (req, res, next) => {
+  // const { userId } = req.params;
+  // const { movieId } = req.body;
+  console.log("likedmovie route start", req.payload)
+  
   
     try {
       // Find the user by ID
-      const user = await User.findById(userId);
+      const user = await User.findById(req.payload._id);
   
       // Check if the user already liked the movie
       if (!user.likedMovies.includes(movieId)) {
@@ -88,7 +85,7 @@ router.post("/:userId/likeMovie", async (req, res, next) => {
   });
 
 
-  module.exports = router;
+ 
 
 
 //delete user by Id /:userId/delete
