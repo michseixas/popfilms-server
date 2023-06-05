@@ -33,6 +33,10 @@ const userSchema = new Schema(
     birth_date: {
       type: Date,
     },
+    imageUrl: {
+      type: String,
+    },
+
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
