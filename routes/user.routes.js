@@ -29,21 +29,13 @@ router.post("/:userId/update", (req, res, next) => {
 
 //delete user by Id /:userId/delete
 router.post("/:userId/delete", (req, res, next) => {
-  console.log("deleteeee method")
+  console.log("deleteeee method");
   const { userId } = req.params; //destructuring (will get userId from URL path)
-  User.findByIdAndRemove(req.session.currentUser._id) //find current user by Id and remove
-    .then((result) => {
-      req.session.destroy((err) => {
-        if (err) {
-          res.status(500).render("auth/logout", { errorMessage: err.message });
-          return;
-        }
-        res.redirect("/auth/login");
-      });
+  User.findByIdAndRemove(userId) //find current user by Id and remove
+    .then(() => {
+      res.json({ message: "Account deleted" });
     })
-      .catch((err) => {
-        console.log(err);
-    });
+    .catch((err) => next(err));
 });
 
 //update user image by Id /:userId/updateImage
