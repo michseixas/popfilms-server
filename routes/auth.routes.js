@@ -73,10 +73,19 @@ router.post("/signup", (req, res, next) => {
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
+      console.log("que es este createduser", createdUser)
       const { email, username, _id } = createdUser;
+
 
       // Create a new object that doesn't expose the password
       const user = { email, username, _id };
+      console.log({
+        from: `"Popfilms Team" <${process.env.EMAIL_ADDRESS}>`,
+        to: email,
+        subject: "Welcome to Popfilms!",
+        text: `Hi, ${username} ! Welcome to Popfilms.`,
+        html: emailTemplate.welcomeEmail(username),
+      })
 
       // Send an email with the information we got from the form(nodemailer)
       transporter.sendMail({
