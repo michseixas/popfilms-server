@@ -30,7 +30,7 @@ const userSchema = new Schema(
     country: {
       type: String,
     },
-    birth_date: {
+    birthDate: {
       type: Date,
     },
     imageUrl: {
