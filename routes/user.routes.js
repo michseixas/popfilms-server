@@ -5,6 +5,7 @@ const router = express.Router();
 //import the mongoose models to access the database with the methods: (find, update, delete, create, find by id, ....)
 const User = require("../models/User.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
+// const { default: MovieDetailsPage } = require("../../popfilms-client/src/pages/MovieDetailsPage");
 
 //find user by Id and retrive data /:userId
 router.get("/:userId", (req, res, next) => {
@@ -28,7 +29,30 @@ router.put("/:userId/update", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+//find movie by Id /:movieId
+// router.get("/:movieId", (req, res, next) => {
+//   const { movieId } = req.params;
+//   console.log(movieId);
+// })
 
+// //addComment /:movieId/addComment
+// router.post("/:movieId/addComment", (req, res, next) => {
+//   const {author, comment} = req.body;
+//   console.log(req.body);
+//   const newComment = {
+//     author,
+//     comment,
+//     movieId: req.params.movieId,
+//   };
+//   Comment.create(newComment)
+//   .then((comment)=> {
+//     navigate("/" + req.params.movieId);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//     next(err);
+//   });
+// });
     
 
     //like dislike movies routes
