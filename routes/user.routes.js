@@ -1,10 +1,10 @@
-//import express to use router
-const express = require("express");
-const router = express.Router();
+  //import express to use router
+  const express = require("express");
+  const router = express.Router();
 
-//import the mongoose models to access the database with the methods: (find, update, delete, create, find by id, ....)
-const User = require("../models/User.model");
-const { isAuthenticated } = require("../middleware/jwt.middleware");
+  //import the mongoose models to access the database with the methods: (find, update, delete, create, find by id, ....)
+  const User = require("../models/User.model");
+  const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 //find user by Id and retrive data /:userId
 router.get("/:userId", (req, res, next) => {
@@ -109,5 +109,18 @@ router.post("/:userId/updateImage", (req, res, next) => {
     })
     .catch((err) => next(err));
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
