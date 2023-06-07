@@ -1,7 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-//Comment Schema
-
 const commentSchema = new Schema({
   author: {
     type: String,
@@ -9,17 +7,13 @@ const commentSchema = new Schema({
   },
   comment: {
     type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
   },
   movieId: {
     type: String,
   },
-  userId: {
-    type: String,
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 

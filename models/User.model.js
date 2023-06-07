@@ -41,7 +41,9 @@ const userSchema = new Schema(
     imageUrl: {
       type: String,
     },
-
+    movieId: {
+      type: [{ type: Schema.Types.ObjectId, ref: "Movie" }],
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
