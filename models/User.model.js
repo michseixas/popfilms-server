@@ -44,6 +44,9 @@ const userSchema = new Schema(
     movieId: {
       type: [{ type: Schema.Types.ObjectId, ref: "Movie" }],
     },
+    isPremium: {
+      type: Boolean, default: false,
+    }
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
