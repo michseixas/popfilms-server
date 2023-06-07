@@ -36,7 +36,8 @@ const MovieSchema = new Schema(
             },
             releaseState: {
                 type: String,
-            }
+            },
+            comment: [{type: Schema.Types.ObjectId, ref: "Comment"}] //since each movie allows more than 1 comment, it should be an array
         }
     ]
 );
