@@ -33,8 +33,8 @@ router.put("/:userId/update", (req, res, next) => {
 // Like a movie
 //check the const {userId} and the const {movieId}
 router.post("/likeMovie", isAuthenticated, async (req, res, next) => {
-  // const { userId } = req.params;
-  // const { movieId } = req.body;
+  const { userId } = req.params;
+  const { movieId } = req.body;
   console.log("likedmovie route start", req.payload);
 
   try {
@@ -45,8 +45,8 @@ router.post("/likeMovie", isAuthenticated, async (req, res, next) => {
     if (!user.likedMovies.includes(movieId)) {
       // Add the movie ID to the likedMovies array
       user.likedMovies.push(movieId);
-      // await user.save();
-      await User.findByIdAndUpdate(userId, user);
+      await user.save();
+      // await User.findByIdAndUpdate(userId, user);
     }
 
     res.status(200).json({ message: "Movie liked successfully." });
@@ -69,7 +69,9 @@ router.post("/:userId/dislikeMovie", async (req, res, next) => {
     if (!user.dislikedMovies.includes(movieId)) {
       // Add the movie ID to the dislikedMovies array
       user.dislikedMovies.push(movieId);
+      console.log("user dislike", user.dislikedMovie)
       await user.save();
+    
     }
 
     res.status(200).json({ message: "Movie disliked successfully." });
