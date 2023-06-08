@@ -28,7 +28,7 @@ router.put("/:userId/update", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-//like dislike movies routes
+
 
 // Like a movie
 //check the const {userId} and the const {movieId}
@@ -55,23 +55,24 @@ router.post("/likeMovie", isAuthenticated, async (req, res, next) => {
   }
 });
 
-//dislike movie
 
-router.post("/:userId/dislikeMovie", async (req, res, next) => {
-  const { userId } = req.params;
+
+
+
+// Dislike a movie --------------
+
+router.post("/disLikeMovie", isAuthenticated, async (req, res, next) => {
   const { movieId } = req.body;
 
   try {
     // Find the user by ID
-    const user = await User.findById(userId);
+    const user = await User.findById(req.payload._id);
 
-    // Check if the user already disliked the movie
-    if (!user.dislikedMovies.includes(movieId)) {
-      // Add the movie ID to the dislikedMovies array
-      user.dislikedMovies.push(movieId);
-      console.log("user dislike", user.dislikedMovie)
+    // Check if the user already liked the movie
+    if (user.likedMovies.includes(movieId)) {
+      // Remove the movie ID from the likedMovies array
+      user.likedMovies = user.likedMovies.filter((id) => id !== movieId);
       await user.save();
-    
     }
 
     res.status(200).json({ message: "Movie disliked successfully." });
@@ -79,6 +80,11 @@ router.post("/:userId/dislikeMovie", async (req, res, next) => {
     next(error);
   }
 });
+
+
+
+
+
 
 //delete user by Id /:userId/delete
 router.post("/:userId/delete", (req, res, next) => {
