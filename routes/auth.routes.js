@@ -23,7 +23,7 @@ const saltRounds = 10;
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
   console.log("vemos este signup......", req.body )
-  const { username, email, password, imageUrl} = req.body;
+  const { username, email, password, imageUrl, premiumCode} = req.body;
 
   // Check if email or password or name are provided as empty strings
   if (email === "" || password === "" || username === "") {
@@ -50,6 +50,7 @@ router.post("/signup", (req, res, next) => {
     return;
   }
 
+
   // Check the users collection if a user with the same email already exists
   User.findOne({ email })
     .then((foundUser) => {
@@ -65,11 +66,20 @@ router.post("/signup", (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
+      // checks the premium code is the same as the one defined in the .env and 
+      //set the isPremium to true. Else set is premium to false.
+      let isPremium = false;
+
+      if (premiumCode === process.env.PREMIUM_CODE) {
+        console.log("Premium code valid")
+       isPremium = true;  
+      } 
+      
       // Create the new user in the database
       
       // We return a pending promise, which allows us to chain another `then`
       console.log("que son las variables estas?!?! ", email, password, username )
-      return User.create({ email, password: hashedPassword, username, imageUrl });
+      return User.create({ email, password: hashedPassword, username, imageUrl, isPremium });
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
