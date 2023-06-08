@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Comment = require("../models/Comment.model");
+const Rating = require("../models/Rating.model");
+const app = express();
 
 // router.get('/:movieId', (req, res, next) => {
 //     const { movieId } = req.params;
@@ -47,6 +49,27 @@ router.post("/:movieId/addComment", (req, res, next) => {
       res.json(comment);
     })
     .catch((err) => next(err));
+});
+
+// POST: rating  /:movieId/rate
+router.post('/:movieId/rate', (req, res, next) => {
+  const movieId = req.params.movieId;
+  const { rating } = req.body;
+  const newRating = new Rating({
+    rating,
+    movieId: movieId,
+  });
+
+  Rating.create(newRating)
+  .then((rating) => {
+    res.json(rating);
+    res.status(200).json({ message: 'Rating submitted successfully' });
+  })
+  .catch((err) => next(err));
+  
+});
+app.listen(5000, () => {    
+  console.log('Server is running on port 5000'); // Start the server
 });
 
 module.exports = router;
