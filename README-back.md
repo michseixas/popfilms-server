@@ -7,7 +7,7 @@ Popfilms is our fullstack final project, featuring a social web app focused on m
 ## About us
 We are three movie enthusiasts and Ironhack students who have collaborated to create Popfilms, a captivating social web app dedicated to exploring and sharing our love for films.
 
-![Project Image](https://t4.ftcdn.net/jpg/01/45/03/99/360_F_145039942_TlScPbqEWiBMPpfSyJyhBBCPcr1l52dP.jpg "Project Image")
+![Project Image](https://res.cloudinary.com/dvdoxs7vr/image/upload/v1686252694/popfilms-logo-1_ssovwp.png "Project Image")
 
 ## Deployment
 You can check the app fully deployed [here](https://www.cactuscoleccion.com/). If you wish to view the API deployment instead, check [here](https://www.cactuscoleccion.com/).
@@ -66,9 +66,9 @@ const movieSchema = new Schema({
 | POST   | /signup                     | const { username, email, password } = req.body      | json({user: user})                                                    | Registers the user in the database and returns the logged in user.        |
 | POST   | /login                      | const { email, password } = req.body                | json({authToken: authToken})                                          | Logs in a user already registered.                                        |                                              | Retrieves all the top 250 movies.        |
 
-## External API used
+## External API Routes
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ultricies ante id ligula pretium, a volutpat augue lobortis. Proin lacinia consequat nisl non feugiat. Integer a efficitur risus.
+We integrated our web application with the IMDB database, allowing users to access and retrieve information seamlessly.
 
 | Method | Endpoint                    | Require                                             | Response (200)                                                        | Action                                                                    |
 | :----: | --------------------------- | --------------------------------------------------- |---------------------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -83,3 +83,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ultricies ante 
 | POST   | /:userId/dislikeMovie                     | const { likedMovies } = req.body      | json({user})                                                    | Finds the user and updates likes array.     |
 | GET   | /:movieId                     | const { movieId }     | json({movie})                                                    | Get the movie by ID and send the info.     |
 | POST   | /addComment                     | const { title, description, idComment } = req.body      | message: "created"                                                   | Creates a comment in the database (movieDetail).        |
+| POST   | /:movieId/rate                     | const { rating, movieId } = req.body      | message: "created"                                                   | Rates a movie (movieDetail).        |
