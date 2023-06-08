@@ -27,6 +27,68 @@ router.put("/:userId/update", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+<<<<<<< HEAD
+=======
+
+
+// Like a movie
+//check the const {userId} and the const {movieId}
+router.post("/likeMovie", isAuthenticated, async (req, res, next) => {
+  const { userId } = req.params;
+  const { movieId } = req.body;
+  console.log("likedmovie route start", req.payload);
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(req.payload._id);
+
+    // Check if the user already liked the movie
+    if (!user.likedMovies.includes(movieId)) {
+      // Add the movie ID to the likedMovies array
+      user.likedMovies.push(movieId);
+      await user.save();
+      // await User.findByIdAndUpdate(userId, user);
+    }
+
+    res.status(200).json({ message: "Movie liked successfully." });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
+
+
+// Dislike a movie --------------
+
+router.post("/dislikeMovie", isAuthenticated, async (req, res, next) => {
+  const { movieId } = req.body;
+  console.log("verrrrrrrrrrrrrrrrrr", req.payload)
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(req.payload._id);
+
+    // Check if the user already liked the movie
+    if (user.likedMovies.includes(movieId)) {
+      // Remove the movie ID from the likedMovies array
+      user.likedMovies = user.likedMovies.filter((id) => id !== movieId);
+      await user.save();
+    }
+
+    res.status(200).json({ message: "Movie disliked successfully." });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
+
+
+
+>>>>>>> dev
 //delete user by Id /:userId/delete
 router.post("/:userId/delete", (req, res, next) => {
   console.log("deleteeee method");
