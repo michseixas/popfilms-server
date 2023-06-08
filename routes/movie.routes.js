@@ -2,22 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Comment = require("../models/Comment.model");
 const Rating = require("../models/Rating.model");
-const app = express();
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
-// router.get('/:movieId', (req, res, next) => {
-//     const { movieId } = req.params;
-
-//     // Make a request to the IMDb API to get movie details
-//     axios.get(`https://imdb-api.com/en/API/Title/k_xmndj5an/${movieId}`)
-//       .then((response) => {
-//         const movieDetails = response.data;
-//         res.json(movieDetails);
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//         res.status(500).json({ error: 'Failed to retrieve movie details' });
-//       });
-//   });
+let baseUrl = "http://localhost:5005/movie";
 
 router.get("/:movieId/getComments", (req, res, next) => {
   const { movieId } = req.params;
@@ -51,23 +38,142 @@ router.post("/:movieId/addComment", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// POST: rating  /:movieId/rate
-router.post('/:movieId/rate', (req, res, next) => {
-  const movieId = req.params.movieId;
-  const { rating } = req.body;
-  const newRating = new Rating({
-    rating,
-    movieId: movieId,
-  });
 
-  Rating.create(newRating)
-  .then((rating) => {
-    res.json(rating);
-    res.status(200).json({ message: 'Rating submitted successfully' });
-  })
-  .catch((err) => next(err));
-  
+
+router.get("/:movieId/rating", (req, res, next) => {
+  const { movieId } = req.params;
+
+  Rating.findOne({ movieId: req.params.movieId })
+    .then((rating) => {
+      console.log(rating);
+      res.json({ rating: rating });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: "Failed to retrieve rating" });
+    });
 });
 
+
+
+// POST: rating  /:movieId/rate
+router.post("/:movieId/rate", (req, res, next) => {
+  const movieId = req.params.movieId;
+  const { rating } = req.body;
+  const newRating = {
+    ratings: rating,
+    movieId: movieId,
+  };
+
+
+  Rating.findOne({ movieId: movieId })
+  .then(resp => {
+    console.log('response finding rating exists', resp);
+    if (resp !== null) {
+      // Update existing item
+      resp.ratings.push(rating);
+      return resp.save();
+    } else {
+      // Create a new item
+
+      const newRating = new Rating({ movieId: movieId, ratings: [rating] });
+      console.log("created ratinf:-------------", newRating);
+      res.json({ rating: newRating });
+
+      return newRating.save();
+      
+      
+    }
+  })
+  .then(updatedRating => {
+    console.log('Updated rating:', updatedRating);
+    // Handle further operations or return the result
+    res.json({ rating: updatedRating});
+
+  })
+  .catch(err => {
+    console.error('Error:', err);
+    // Handle errors
+  });
+
+//   Rating.findOne({movieId: movieId})
+//   .then(resp => {
+// console.log('response finding rating exists', resp)
+// if(resp !== null) {
+// //update
+
+
+//   // Rating.findOneAndUpdate({movieId}, {$push: {ratings: rating}}, {new:true} )
+//   // .then()
+//   // .catch((err) => next(err));
+// } else {
+// //create
+// }
+//   })
+//   .catch((err) => next(err));
+
+  // Rating.findOneAndUpdate({movieId}, {$push: {ratings: rating}}, {new:true} )
+  // .then()
+  // .catch((err) => next(err));
+
+
+  // Rating.create(newRating)
+  //   .then((rating) => {
+  //     console.log("created ratinf:-------------", rating);
+  //     res.json({ message: "Rating submitted successfully", rating });
+  //   })
+  //   .catch((err) => next(err));
+});
+
+//like dislike movies routes
+
+// Like a movie
+//check the const {userId} and the const {movieId}
+router.post("/likeMovie", isAuthenticated, async (req, res, next) => {
+  const { userId } = req.params;
+  const { movieId } = req.body;
+  console.log("likedmovie route start", req.payload);
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(req.payload._id);
+
+    // Check if the user already liked the movie
+    if (!user.likedMovies.includes(movieId)) {
+      // Add the movie ID to the likedMovies array
+      user.likedMovies.push(movieId);
+      await user.save();
+      // await User.findByIdAndUpdate(userId, user);
+    }
+
+    res.status(200).json({ message: "Movie liked successfully." });
+  } catch (error) {
+    next(error);
+  }
+});
+
+//dislike movie
+
+router.post("/:userId/dislikeMovie", async (req, res, next) => {
+  const { userId } = req.params;
+  const { movieId } = req.body;
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // Check if the user already disliked the movie
+    if (!user.dislikedMovies.includes(movieId)) {
+      // Add the movie ID to the dislikedMovies array
+      user.dislikedMovies.push(movieId);
+      console.log("user dislike", user.dislikedMovie);
+      await user.save();
+    }
+
+    res.status(200).json({ message: "Movie disliked successfully." });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

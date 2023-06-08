@@ -4,7 +4,6 @@ const router = express.Router();
 
 //import the mongoose models to access the database with the methods: (find, update, delete, create, find by id, ....)
 const User = require("../models/User.model");
-const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 //find user by Id and retrive data /:userId
 router.get("/:userId", (req, res, next) => {
@@ -26,58 +25,6 @@ router.put("/:userId/update", (req, res, next) => {
       res.json(user); //send a json response with updated user
     })
     .catch((err) => next(err));
-});
-
-//like dislike movies routes
-
-// Like a movie
-//check the const {userId} and the const {movieId}
-router.post("/likeMovie", isAuthenticated, async (req, res, next) => {
-  const { userId } = req.params;
-  const { movieId } = req.body;
-  console.log("likedmovie route start", req.payload);
-
-  try {
-    // Find the user by ID
-    const user = await User.findById(req.payload._id);
-
-    // Check if the user already liked the movie
-    if (!user.likedMovies.includes(movieId)) {
-      // Add the movie ID to the likedMovies array
-      user.likedMovies.push(movieId);
-      await user.save();
-      // await User.findByIdAndUpdate(userId, user);
-    }
-
-    res.status(200).json({ message: "Movie liked successfully." });
-  } catch (error) {
-    next(error);
-  }
-});
-
-//dislike movie
-
-router.post("/:userId/dislikeMovie", async (req, res, next) => {
-  const { userId } = req.params;
-  const { movieId } = req.body;
-
-  try {
-    // Find the user by ID
-    const user = await User.findById(userId);
-
-    // Check if the user already disliked the movie
-    if (!user.dislikedMovies.includes(movieId)) {
-      // Add the movie ID to the dislikedMovies array
-      user.dislikedMovies.push(movieId);
-      console.log("user dislike", user.dislikedMovie)
-      await user.save();
-    
-    }
-
-    res.status(200).json({ message: "Movie disliked successfully." });
-  } catch (error) {
-    next(error);
-  }
 });
 
 //delete user by Id /:userId/delete

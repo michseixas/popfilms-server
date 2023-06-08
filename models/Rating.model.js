@@ -1,9 +1,9 @@
 const { Schema, model } = require("mongoose");
 
 const ratingSchema = new Schema({
-  rating: {
-    type: String,
-  },
+  ratings: [{
+    type: Number,
+  }],
   movieId: {
     type: String,
   },
