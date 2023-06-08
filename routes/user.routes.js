@@ -61,8 +61,9 @@ router.post("/likeMovie", isAuthenticated, async (req, res, next) => {
 
 // Dislike a movie --------------
 
-router.post("/disLikeMovie", isAuthenticated, async (req, res, next) => {
+router.post("/dislikeMovie", isAuthenticated, async (req, res, next) => {
   const { movieId } = req.body;
+  console.log("verrrrrrrrrrrrrrrrrr", req.payload)
 
   try {
     // Find the user by ID
