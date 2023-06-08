@@ -68,8 +68,6 @@ router.post('/:movieId/rate', (req, res, next) => {
   .catch((err) => next(err));
   
 });
-app.listen(5000, () => {    
-  console.log('Server is running on port 5000'); // Start the server
-});
+
 
 module.exports = router;
