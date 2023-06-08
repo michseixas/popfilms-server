@@ -27,8 +27,6 @@ router.put("/:userId/update", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-<<<<<<< HEAD
-=======
 
 
 // Like a movie
@@ -88,7 +86,6 @@ router.post("/dislikeMovie", isAuthenticated, async (req, res, next) => {
 
 
 
->>>>>>> dev
 //delete user by Id /:userId/delete
 router.post("/:userId/delete", (req, res, next) => {
   console.log("deleteeee method");
