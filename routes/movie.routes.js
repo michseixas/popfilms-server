@@ -38,8 +38,6 @@ router.post("/:movieId/addComment", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-
-
 router.get("/:movieId/rating", (req, res, next) => {
   const { movieId } = req.params;
 
@@ -54,8 +52,6 @@ router.get("/:movieId/rating", (req, res, next) => {
     });
 });
 
-
-
 // POST: rating  /:movieId/rate
 router.post("/:movieId/rate", (req, res, next) => {
   const movieId = req.params.movieId;
@@ -65,64 +61,31 @@ router.post("/:movieId/rate", (req, res, next) => {
     movieId: movieId,
   };
 
-
   Rating.findOne({ movieId: movieId })
-  .then(resp => {
-    console.log('response finding rating exists', resp);
-    if (resp !== null) {
-      // Update existing item
-      resp.ratings.push(rating);
-      return resp.save();
-    } else {
-      // Create a new item
+    .then((resp) => {
+      console.log(resp);
+      if (resp !== null) {
+        // Update existing item
+        resp.ratings.push(rating);
+        return resp.save();
+      } else {
+        // Create a new item
 
-      const newRating = new Rating({ movieId: movieId, ratings: [rating] });
-      console.log("created ratinf:-------------", newRating);
-      res.json({ rating: newRating });
+        const newRating = new Rating({ movieId: movieId, ratings: [rating] });
+        console.log(newRating);
+        res.json({ rating: newRating });
 
-      return newRating.save();
-      
-      
-    }
-  })
-  .then(updatedRating => {
-    console.log('Updated rating:', updatedRating);
-    // Handle further operations or return the result
-    res.json({ rating: updatedRating});
-
-  })
-  .catch(err => {
-    console.error('Error:', err);
-    // Handle errors
-  });
-
-//   Rating.findOne({movieId: movieId})
-//   .then(resp => {
-// console.log('response finding rating exists', resp)
-// if(resp !== null) {
-// //update
-
-
-//   // Rating.findOneAndUpdate({movieId}, {$push: {ratings: rating}}, {new:true} )
-//   // .then()
-//   // .catch((err) => next(err));
-// } else {
-// //create
-// }
-//   })
-//   .catch((err) => next(err));
-
-  // Rating.findOneAndUpdate({movieId}, {$push: {ratings: rating}}, {new:true} )
-  // .then()
-  // .catch((err) => next(err));
-
-
-  // Rating.create(newRating)
-  //   .then((rating) => {
-  //     console.log("created ratinf:-------------", rating);
-  //     res.json({ message: "Rating submitted successfully", rating });
-  //   })
-  //   .catch((err) => next(err));
+        return newRating.save();
+      }
+    })
+    .then((updatedRating) => {
+      console.log(updatedRating);
+      // Handle further operations or return the result
+      res.json({ rating: updatedRating });
+    })
+    .catch((err) => {
+      console.error("Error:", err);
+    });
 });
 
 //like dislike movies routes
@@ -175,5 +138,7 @@ router.post("/:userId/dislikeMovie", async (req, res, next) => {
     next(error);
   }
 });
+
+
 
 module.exports = router;
