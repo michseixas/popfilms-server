@@ -4,7 +4,7 @@ const Comment = require("../models/Comment.model");
 const Rating = require("../models/Rating.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 
-let baseUrl = "http://localhost:5005/movie";
+let baseUrl = import.meta.env.VITE_API_URL + "/movie";
 
 router.get("/:movieId/getComments", (req, res, next) => {
   const { movieId } = req.params;
