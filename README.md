@@ -10,10 +10,7 @@ We are three movie enthusiasts and Ironhack students who have collaborated to cr
 ![Project Image](https://t4.ftcdn.net/jpg/01/45/03/99/360_F_145039942_TlScPbqEWiBMPpfSyJyhBBCPcr1l52dP.jpg "Project Image")
 
 ## Deployment
-You can check the app fully deployed [here](https://www.cactuscoleccion.com/). If you wish to view the API deployment instead, check [here](https://www.cactuscoleccion.com/).
-
-## Work structure
-We used [Trello](https://trello.com/home) to organize our workflow.
+You can check the app fully deployed [here](https://popfilms.netlify.app/). 
 
 ## Installation guide
 - Fork this repo
