@@ -22,7 +22,6 @@ const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  console.log("vemos este signup......", req.body )
   const { username, email, password, imageUrl, premiumCode} = req.body;
 
   // Check if email or password or name are provided as empty strings
@@ -54,7 +53,6 @@ router.post("/signup", (req, res, next) => {
   // Check the users collection if a user with the same email already exists
   User.findOne({ email })
     .then((foundUser) => {
-      console.log("que es el found user email???-----", foundUser)
       // If the user with the same email already exists, send an error response
       if (foundUser) {
         console.log("User Already Exists")
@@ -78,13 +76,11 @@ router.post("/signup", (req, res, next) => {
       // Create the new user in the database
       
       // We return a pending promise, which allows us to chain another `then`
-      console.log("que son las variables estas?!?! ", email, password, username )
       return User.create({ email, password: hashedPassword, username, imageUrl, isPremium });
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      console.log("que es este createduser", createdUser)
       const { email, username, _id } = createdUser;
 
 

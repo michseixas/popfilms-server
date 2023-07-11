@@ -63,8 +63,6 @@ router.post("/likeMovie", isAuthenticated, async (req, res, next) => {
 
 router.post("/dislikeMovie", isAuthenticated, async (req, res, next) => {
   const { movieId } = req.body;
-  console.log("verrrrrrrrrrrrrrrrrr", req.payload)
-
   try {
     // Find the user by ID
     const user = await User.findById(req.payload._id);
@@ -89,7 +87,6 @@ router.post("/dislikeMovie", isAuthenticated, async (req, res, next) => {
 
 //delete user by Id /:userId/delete
 router.post("/:userId/delete", (req, res, next) => {
-  console.log("deleteeee method");
   const { userId } = req.params; //destructuring (will get userId from URL path)
   User.findByIdAndRemove(userId) //find current user by Id and remove
     .then(() => {
